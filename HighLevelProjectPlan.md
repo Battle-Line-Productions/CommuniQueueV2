@@ -392,61 +392,57 @@ This feature implements the tracking and enforcement of usage limits. It include
 - **Story 8.5.4:** Implement graceful degradation for limit exceedance
 - **Story 8.5.5:** Create usage reporting and projections
 
-## Epic 9: API Development
+## Epic 9: External API & Developer Experience
 
-### Feature 9.1: API Framework
-This feature establishes the foundation of the CommuniQueue API. It includes setting up API project structure and routing, implementing API versioning strategy, creating global error handling and consistent response formats, building API authentication middleware, and implementing request logging and monitoring.
+### Feature 9.1: API Infrastructure
+This feature establishes the foundational infrastructure for the CommuniQueue external API. It focuses on creating a robust, secure, and scalable API architecture that third-party developers can rely on. The infrastructure includes authentication mechanisms, versioning strategy, consistent error handling, and comprehensive request/response logging to ensure a professional-grade API experience.
 
-- **Story 9.1.1:** Set up API project structure and routing
-- **Story 9.1.2:** Implement API versioning strategy
-- **Story 9.1.3:** Create global error handling and responses
-- **Story 9.1.4:** Build API authentication middleware
-- **Story 9.1.5:** Implement API request logging and monitoring
+- **Story 9.1.1:** Implement API gateway and routing architecture
+- **Story 9.1.2:** Create API versioning strategy and URL structure
+- **Story 9.1.3:** Build comprehensive API authentication framework (JWT, API keys)
+- **Story 9.1.4:** Implement standardized error handling and response formats
+- **Story 9.1.5:** Create API request/response logging and diagnostic system
+- **Story 9.1.6:** Build API health check and status endpoints
 
-### Feature 9.2: Tenant & User API
-This feature implements API endpoints for tenant and user management. It includes creating tenant management endpoints, implementing user invitation and management API, building role assignment endpoints, implementing tenant settings API, and creating API key management endpoints for programmatic access.
+### Feature 9.2: API Documentation & Developer Portal
+This feature creates a comprehensive developer experience centered around API documentation. It includes implementing interactive API documentation, creating a developer portal for API consumers, building tutorials and integration guides, and establishing a changelog system to track API evolution. The documentation will be both human-readable and machine-consumable for tooling integration.
 
-- **Story 9.2.1:** Create tenant management endpoints
-- **Story 9.2.2:** Implement user invitation and management API
-- **Story 9.2.3:** Build role assignment endpoints
-- **Story 9.2.4:** Implement tenant settings API
-- **Story 9.2.5:** Create API key management endpoints
+- **Story 9.2.1:** Implement OpenAPI/Swagger specification for all endpoints
+- **Story 9.2.2:** Create interactive API documentation with live testing capabilities
+- **Story 9.2.3:** Build developer portal with authentication and personalization
+- **Story 9.2.4:** Implement API changelog and versioning notes
+- **Story 9.2.5:** Create comprehensive API tutorials and integration guides
+- **Story 9.2.6:** Build API request/response examples for all endpoints
 
-### Feature 9.3: Project & Container API
-This feature implements API endpoints for project and container management. It includes creating project management endpoints, implementing container hierarchy endpoints, building project/container query and search API, implementing project/container permission endpoints, and creating bulk operations API for efficiency.
+### Feature 9.3: SDK Generation & Code Samples
+This feature focuses on making API integration easier for developers by providing auto-generated SDKs, code samples in multiple languages, and integration templates. It includes tools to keep SDKs and examples in sync with the API as it evolves, ensuring developers always have access to up-to-date integration resources.
 
-- **Story 9.3.1:** Create project management endpoints
-- **Story 9.3.2:** Implement container hierarchy endpoints
-- **Story 9.3.3:** Build project/container query and search API
-- **Story 9.3.4:** Implement project/container permission endpoints
-- **Story 9.3.5:** Create bulk operations API
+- **Story 9.3.1:** Create SDK generation pipeline from OpenAPI specification
+- **Story 9.3.2:** Build .NET SDK with strong typing and IntelliSense support
+- **Story 9.3.3:** Implement JavaScript/TypeScript SDK for web applications
+- **Story 9.3.4:** Create Python SDK for data integration scenarios
+- **Story 9.3.5:** Build code sample repository with common integration patterns
+- **Story 9.3.6:** Implement API client configuration templates
 
-### Feature 9.4: Template & Notification API
-This feature implements API endpoints for template management and notification sending. It includes creating template management endpoints, implementing template version endpoints, building template testing API, implementing notification send endpoints, and creating notification tracking and status API for monitoring deliveries.
+### Feature 9.4: API Monitoring & Analytics
+This feature implements comprehensive monitoring and analytics for the API surface. It includes tracking API usage patterns, performance metrics, error rates, and client behaviors. The monitoring system will provide both internal dashboards for CommuniQueue administrators and usage insights for API consumers through the developer portal.
 
-- **Story 9.4.1:** Create template management endpoints
-- **Story 9.4.2:** Implement template version endpoints
-- **Story 9.4.3:** Build template testing API
-- **Story 9.4.4:** Implement notification send endpoint
-- **Story 9.4.5:** Create notification tracking and status API
+- **Story 9.4.1:** Implement API call volume and pattern tracking
+- **Story 9.4.2:** Create API performance monitoring and alerting
+- **Story 9.4.3:** Build API error tracking and analysis tools
+- **Story 9.4.4:** Implement client-specific API usage dashboards
+- **Story 9.4.5:** Create API usage reporting and export tools
+- **Story 9.4.6:** Build API usage prediction and capacity planning tools
 
-### Feature 9.5: Subscription API
-This feature implements API endpoints for subscription management. It includes creating subscription management endpoints, implementing plan upgrade/downgrade API, building coupon application endpoints, implementing usage reporting API, and creating enterprise customization endpoints for special clients.
+### Feature 9.5: API Rate Limiting & Throttling
+This feature implements advanced rate limiting and throttling mechanisms to protect the API from abuse while ensuring fair access for all consumers. It includes configurable rate limits based on subscription tier, burst handling for legitimate traffic spikes, and graceful degradation patterns that maintain API stability under load.
 
-- **Story 9.5.1:** Create subscription management endpoints
-- **Story 9.5.2:** Implement plan upgrade/downgrade API
-- **Story 9.5.3:** Build coupon application endpoints
-- **Story 9.5.4:** Implement usage reporting API
-- **Story 9.5.5:** Create enterprise customization endpoints
-
-### Feature 9.6: API Documentation
-This feature provides comprehensive API documentation. It includes implementing OpenAPI/Swagger documentation, creating detailed API reference documentation, building an interactive API test console, implementing sample code generation for common languages, and creating API usage tutorials and guides.
-
-- **Story 9.6.1:** Implement OpenAPI/Swagger documentation
-- **Story 9.6.2:** Create API reference documentation
-- **Story 9.6.3:** Build interactive API test console
-- **Story 9.6.4:** Implement API sample code generation
-- **Story 9.6.5:** Create API usage tutorials and guides
+- **Story 9.5.1:** Implement tier-based API rate limiting framework
+- **Story 9.5.2:** Create configurable rate limit rules by endpoint and method
+- **Story 9.5.3:** Build rate limit notification and header system
+- **Story 9.5.4:** Implement burst handling and request queuing
+- **Story 9.5.5:** Create rate limit override and exemption system
+- **Story 9.5.6:** Build rate limit analytics and abuse detection
 
 ## Epic 10: Post-MVP Reporting & Analytics
 
