@@ -66,6 +66,23 @@
 
 ## Epic 1: Core Infrastructure & Setup
 
+**Description:**  
+Core Infrastructure & Setup establishes the technological backbone for CommuniQueue. This epic includes initial architecture design, development tooling, orchestration, containerization, and deployment pipelines. The ambition is not just to build a solid foundation, but to future-proof the platform for rapid feature evolution and operational scaling. The choices here (modern .NET stack, multi-service orchestration via Aspire, strict containerization) are deliberate: they mitigate early technical debt, maximize developer productivity, guarantee maintainability, and set the stage for secure, reliable multi-environment deployments. This epic also tackles critical non-functional concerns—performance, logging, resilience, and developer experience—all crucial for supporting a cloud-native SaaS with enterprise reliability expectations. By investing here first, we ensure subsequent feature epics sit atop a robust, testable, and cost-effective infrastructure that aligns with your vision for modular, team-scalable delivery.
+
+**Why:**  
+- Removes bottlenecks and rework by getting the architecture right from the start.
+- Accelerates onboarding for future hires and contributors.
+- Ensures platform is cloud-native, resilient, and scalable for both MVP and long-term growth.
+- Enables rapid, automated delivery of updates—critical for SaaS competitiveness and security patches.
+- Supports multi-service decoupling for flexibility (move fast without fragile monolith).
+- Foundation for compliance, observability, and operational excellence.
+
+**What Success Looks Like:**  
+- Developers can ship features rapidly and safely.
+- Ops can scale, roll back, or redeploy any service independently.
+- Outages, bottlenecks, or integration pains are rare and quickly traceable.
+- New environments (dev, staging, prod) can be spun up or torn down in minutes.
+
 ### Feature 1.1: .NET Solution Architecture
 This feature involves establishing the core architecture of the CommuniQueue platform using .NET 9. It includes setting up a structured solution with Aspire orchestration for service coordination, creating a Blazor Server app for the primary UI, implementing an API service for external integrations, and developing a background worker service for asynchronous processing. The solution architecture will establish shared libraries for common business logic and data models, ensuring code reuse and maintainability across services.
 
@@ -687,6 +704,22 @@ Implement a data seeding mechanism that populates the development database with 
 
 
 ## Epic 2: Authentication & Authorization
+
+**Description:**  
+Authentication & Authorization is the entry point of trust for CommuniQueue. This epic orchestrates the identity plane—ensuring the right users (and systems) access the right resources, at the right time, with the right permissions. It weaves together secure authentication (Auth0 SSO/JWT), extensible user management, granular RBAC, and advanced capabilities like hierarchical, cross-entity permission inheritance and superadmin impersonation. Importantly, it bakes in modern security hygiene—auditing, rate limiting, session control, and continuous monitoring—anticipating real-world abuse and compliance needs from day one. By implementing a robust, fine-grained access model, CommuniQueue can confidently serve organizations of all maturity levels, enforce need-to-know privileges, and adapt to future requirements (such as external integrations, SSO partners, or regulatory mandates).
+
+**Why:**  
+- Protects sensitive notification channels from unauthorized use.
+- Provides enterprise-grade access modeling (RBAC + inheritance + deny logic).
+- Supports organizational structures of any complexity (cross-tenant, nested projects).
+- Enables SaaS-friendly features: SSO, scalable APIs, audit trail for compliance.
+- Prevents account takeover, data leaks, or lateral privilege escalation.
+
+**What Success Looks Like:**  
+- Administrators and users only see and do what they’re entitled to—by entity, project, or tenant.
+- Security incidents are rare, quickly detected, and easy to audit.
+- External audits can be passed with confidence on access controls and event histories.
+- Authorization logic is flexible enough to handle future expansion (e.g., SAML, delegated auth, new RBAC dimensions).
 
 ### Feature 2.1: Auth0 Integration
 This feature implements secure authentication for CommuniQueue using Auth0. It includes setting up the Auth0 tenant, implementing user authentication flows in the Blazor Server application, configuring JWT validation for secure token handling, and establishing SSO capabilities for enterprise clients. The Auth0 integration will synchronize user profiles between Auth0 and the application database and implement comprehensive session management.
@@ -1387,6 +1420,22 @@ Implement comprehensive session management including the ability to force logout
 
 ## Epic 3: Multi-tenancy Framework
 
+**Description:**  
+Multi-Tenancy Framework is the organizational and isolation layer of CommuniQueue. This epic governs how multiple, fully partitioned organizations (tenants) safely coexist within the same SaaS infrastructure. It defines tenant provisioning, user mapping, invitation flows, and tenant-level administration—ensuring robust, data-level isolation and tailored policy enforcement (such as per-tenant limits and subscription plans). A resilient multi-tenancy design enables CommuniQueue to scale economically, serve both SMBs and large enterprises, and offer seamless “one account, many orgs” UX patterns. The framework addresses user and data isolation, onboarding automation, and policy inheritance, which are fundamental in enabling upgrades, enterprise sales, and compliance.
+
+**Why:**  
+- Allows secure scaling to hundreds (or thousands) of customer orgs on a shared platform.
+- Guarantees strong separation to prevent accidental or malicious data cross-over.
+- Supports multi-org users (consultants, agencies, parent orgs).
+- Unlocks feature packaging and pricing flexibility (per-tenant plans, quotas, entitlements).
+- Simplifies onboarding and makes user-driven growth (invite, self-service creation) possible.
+
+**What Success Looks Like:**  
+- Tenants are fully isolated—no cross-tenant data or event leakage.
+- Org-level configuration (branding, access, quotas) is frictionless.
+- Tenant-admin workflows (invitation, role mapping, metadata management) are smooth and scalable.
+- The product’s business model (per-tenant billing/limits/support) is directly enabled by the architecture.
+
 ### Feature 3.1: Tenant Provisioning
 This feature implements the tenant provisioning system for CommuniQueue's multi-tenant architecture. It includes creating the Tenant entity model and database schema, implementing automatic tenant creation during user signup, enforcing tenant limits per user (up to 6 by default), tenant activation/deactivation functionality, and tenant metadata management including name and description fields.
 
@@ -1777,6 +1826,20 @@ Implement functionality for exporting tenant data for backup, analysis, or migra
 - Authorization ensures only permitted users can export data
 
 ## Epic 4: Project & Container Management
+
+**Description:**  
+Project & Container Management provides the primary “information architecture” layer for CommuniQueue. This epic organizes messaging assets (templates, configs) into logical, hierarchical units tailored to complex business use-cases. Projects group messages by initiative or client; containers offer deep nesting, mirroring real-world orgs or campaign structures; both support fine-grained access, search, and bulk operations. This not only helps teams declutter and scale their communication assets, but also unlocks advanced features: permission overrides, flexible reporting, and workflow control. A thoughtfully designed hierarchy allows CommuniQueue to support everything from startups (few projects) to enterprises (dozens of subdivisions, campaigns, departments) without UI or admin chaos.
+
+**Why:**  
+- Enables scalable, organized management of hundreds or thousands of templates.
+- Facilitates targeted permissions: e.g., Marketing can access only their campaigns.
+- Supports future features such as detailed analytics breakout (by project/campaign).
+- Streamlines onboarding—users can find, clone, or manage relevant assets intuitively.
+
+**What Success Looks Like:**  
+- Users quickly locate, organize, and secure their messaging templates.
+- Permission assignment is flexible but never confusing.
+- Orgs of any scale can map their structure naturally onto the product’s hierarchy.
 
 ### Feature 4.1: Project Structure
 This feature implements the project organization system as the primary structural element within tenants. It includes creating the Project entity model and database schema, implementing CRUD operations for projects, building project listing and dashboard UI components, establishing project-specific permission controls, and implementing search and filtering capabilities for projects.
@@ -2193,6 +2256,21 @@ Implement comprehensive audit logging for all access-related actions on projects
 - Authorization ensures only appropriate users can view logs
 
 ## Epic 5: Template System
+
+**Description:**  
+Template System is the creative and operational heart of CommuniQueue. This epic encompasses everything related to authoring, editing, versioning, and managing notification templates (across email, SMS, webhook). It delivers advanced features—rich editors, type-aware validation, robust version control, permissioned publishing, and recipient management—to make messaging both dynamic and safe. By providing repeatable, reusable, and auditable templates, CommuniQueue saves organizations time, reduces errors, and aligns their messaging with compliance (marketing vs transactional distinctions, approval flows). This system is made to support both rapid testing and rock-solid production use—enabling “build, test, ready” states, version rollback, and personalizations at scale.
+
+**Why:**  
+- Eliminates message duplication and inconsistent branding/errors.
+- Enables separation of responsibilities (content owners, reviewers, publishers).
+- Supports compliance (retain versions for legal, manage “live” content rigorously).
+- Makes powerful personalization simple and reusable across campaigns and messages.
+
+**What Success Looks Like:**  
+- Users confidently build and evolve templates without fear of breaking production.
+- There’s traceability for every change—who, what, when, for every version.
+- Templates are reusable, copyable, and can be tested safely before use.
+- The platform makes it easy to support new message types in the future.
 
 ### Feature 5.1: Template Management
 This feature implements the core template management functionality. It includes creating the Template entity model and database schema, implementing CRUD operations for templates, building template listing and dashboard UI components, implementing state management for template workflow stages (Building/Testing/Ready), and handling different template types (Email/SMS/Webhook).
@@ -2751,6 +2829,20 @@ Implement support for dynamic recipients using template variables. This allows r
 - Integration with permission system for dynamic recipients
 
 ## Epic 6: Notification Services
+
+**Description:**  
+Notification Services brings CommuniQueue’s messages to life, integrating with external providers (SendGrid for email, Twilio for SMS, webhooks for extensibility) to enable reliable multi-channel delivery. This epic ensures robust, decoupled sending: background queue processing, provider failover, delivery tracking webhooks, and retry backoff. It incorporates pluggable architecture (supporting new channels in the future) and injects resilience and observability into every step (logging, status tracking, error capture). By focusing on async, queue-based design, the system can handle bursty loads, isolate external provider failures, and optimize for performance/cost. This also opens the door to sophisticated analytics and regulatory auditability.
+
+**Why:**  
+- Isolates business logic from external service flakiness.
+- Supports high concurrency and burst scaling for large notifications.
+- Enables real-time and post-hoc insights into delivery, failures, and provider health.
+- Allows product growth—new channels or providers—without massive rework.
+
+**What Success Looks Like:**  
+- Messages are reliably delivered, with minimal failures—even under stress.
+- Failures are quickly detected, logged, and retried (with no end-user confusion).
+- It’s easy to monitor, debug, and adapt to provider-specific issues or migrations.
 
 ### Feature 6.1: SendGrid Integration
 This feature implements email delivery through SendGrid. It includes creating a SendGrid API client, implementing template transformation logic for SendGrid compatibility, building email delivery and tracking mechanisms, implementing sender verification and management, and creating email validation services for ensuring deliverability.
@@ -3328,6 +3420,20 @@ Create systems for monitoring worker performance and implementing scaling capabi
 
 ## Epic 7: Notification Tracking
 
+**Description:**  
+Notification Tracking is the visibility and assurance layer of CommuniQueue. This epic tracks every message—its journey, recipient-level delivery status, failures, and associated debug context. The system surfaces analytics, alerting, and export capabilities to enable troubleshooting, compliance, and performance optimization. Built-in data retention and anonymization supports privacy by design, while still preserving critical metrics. Notification tracking is the bridge from “send and hope” to “send and know,” empowering users to demonstrate efficacy, debug issues, and meet SLAs or legal requirements.
+
+**Why:**  
+- Transforms notification sending from a blind push to a trackable, auditable workflow.
+- Enables rapid issue detection and resolution (why did this fail?).
+- Fuels user trust and supports external compliance/audit needs (GDPR, SOC2).
+- Supports future advanced analytics, billing, and performance tuning.
+
+**What Success Looks Like:**  
+- Users and admins can diagnose message delivery in real-time or historically.
+- Regulatory or support audits can be handled quickly, with evidence.
+- A/B testing, engagement tracking, and optimization are all straightforward and accurate.
+
 ### Feature 7.1: Notification Status Tracking
 This feature implements tracking for notification delivery status. It includes creating the NotificationTracking entity model, generating tracking records when notifications are sent, implementing status update mechanisms based on provider callbacks, building status query and filtering capabilities, and creating notification history view components.
 
@@ -3896,6 +4002,21 @@ Implement comprehensive dashboard and visualization components for notification 
 - Usability testing with end users
 
 ## Epic 8: Subscription & Billing
+
+**Description:**  
+Subscription & Billing governs the commercial core of CommuniQueue. This epic implements tiered subscription plans, usage quotas, billing cycles, and coupon/promotion mechanisms—enabling the business model. It supports per-tenant entitlements, granular plan features, enterprise-grade exceptions (custom contracts), and robust usage accounting. By designing for flexibility (versioned plans, overrides, and discounts), CommuniQueue can sell to SMBs and large enterprises, adapt to market feedback, and experiment with pricing without code risk. Auditability and upgrade/downgrade flows are central, so every price or entitlement change is traceable, and the customer experience remains smooth.
+
+**Why:**  
+- Unlocks monetization options: SaaS, tiered pricing, self-service upgrades, enterprise sales.
+- Enables tight control over system load and cost exposure (quotas, limits).
+- Provides levers for sales growth (promotion campaigns, feature gating, account expansion).
+- Ensures every transaction is trackable and defensible for revenue and compliance.
+
+**What Success Looks Like:**  
+- Users can self-serve upgrades/downgrades, and billing is transparent and fair.
+- Admins can create exceptions for strategic accounts without complex manual workarounds.
+- Overuse, abuse, and billing disputes are rare and quickly addressable.
+- All financial flows are reportable, auditable, and support business growth.
 
 ### Feature 8.1: Subscription Plans
 This feature implements the subscription plan framework. It includes creating the SubscriptionPlan entity model, implementing tiered plan definitions (Free/Standard/Plus/Premium/Enterprise), building the plan feature matrix for capability control, implementing plan versioning and management, and handling plan effective dates for transitions.
@@ -4475,6 +4596,21 @@ Implement reporting tools that provide insights into resource usage patterns, tr
 - Accessibility compliance for usage dashboards
 
 ## Epic 9: External API & Developer Experience
+
+**Description:**  
+External API & Developer Experience transforms CommuniQueue from a self-contained app into a true platform. This epic delivers a secure, well-documented API surface, interactive documentation, auto-generated SDKs, analytics, and developer-focused support. Key pillars: robust API authentication (keys, JWT), clear versioning, rapid onboarding for external devs, and self-service API management. These elements lower integration friction, accelerate third-party adoption, and set the foundation to become a central notification backbone for other SaaS or enterprise systems. API observability, scalable rate limiting, and automated error feedback prevent support escalations and drive customer satisfaction.
+
+**Why:**  
+- Makes CommuniQueue extensible—unlocks integrations with CRM, ERP, marketing, etc.
+- Provides critical stickiness; users can embed CQ into their product(s) or workflow(s).
+- Supports developer self-service, reducing support and accelerating integrations.
+- Opening the API surface enables ecosystem growth, partnerships, and platform defensibility.
+
+**What Success Looks Like:**  
+- Third parties can build integrations in hours, not weeks.
+- Developers can easily explore, test, and get support with minimal friction.
+- API changes are compatible, versioned, and clearly communicated.
+- The API’s usage is observable, monitorable, and billable by tenant.
 
 ### Feature 9.1: API Infrastructure
 This feature establishes the foundational infrastructure for the CommuniQueue external API. It focuses on creating a robust, secure, and scalable API architecture that third-party developers can rely on. The infrastructure includes authentication mechanisms, versioning strategy, consistent error handling, and comprehensive request/response logging to ensure a professional-grade API experience.
@@ -5184,6 +5320,21 @@ Create analytics tools focused on rate limiting patterns and implement systems t
 - Manual investigation tools for flagged activity
 
 ## Epic 10: Post-MVP Reporting & Analytics
+
+**Description:**  
+Post-MVP Reporting & Analytics evolves CommuniQueue into a true insight-driven platform, surfacing actionable analytics to users at every level—tenant, project, and template. This epic goes beyond operational tracking, introducing dashboards, visualizations, time-series analysis, A/B testing frameworks, cost reporting, and scheduled exports. The vision is to transform “did it send?” into “is it effective?”—enabling users to optimize campaigns, justify ROI, identify issues, and benchmark against previous periods or industry norms. Advanced features (engagement tracking, benchmarking, predictive analytics) are designed to turn CQ into a strategic communications hub, not just a delivery engine.
+
+**Why:**  
+- Empowers users (and buyers) with data to drive internal decisions and justify spend.
+- Differentiates against competitors—advanced analytics is a key SaaS retention and upsell driver.
+- Enables proactive optimization: better engagement, lower costs, and risk detection.
+- Serves compliance, forecast, and operational improvement needs for clients.
+
+**What Success Looks Like:**  
+- Users can measure and optimize their communications, realizing tangible business value.
+- High engagement and delivery rates due to actionable insights.
+- Product adoption and expansion rates grow as users see demonstrable campaign ROI.
+- Platform becomes sticky, as organizations rely on CQ for historic and real-time reporting.
 
 ### Feature 10.1: Analytics Dashboard
 This feature implements a comprehensive analytics dashboard. It includes creating tenant-level analytics dashboard components, implementing project/template analytics views, building time-series visualization components, implementing analytics filtering and date range selection, and creating analytics export functionality.
