@@ -105,10 +105,6 @@ CommuniQueue follows a microservices architecture:
 
 All services communicate via well-defined interfaces and message queues for asynchronous processing.
 
-## License
-
-[Your chosen license]
-
 ## Contact
 
 Michael Cavanaugh
