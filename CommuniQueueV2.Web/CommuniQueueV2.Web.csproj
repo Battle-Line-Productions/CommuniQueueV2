@@ -7,7 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommuniQueueV2.ServiceDefaults\CommuniQueueV2.ServiceDefaults.csproj" />
+    <Compile Remove="wwwroot\lib\**" />
+    <Content Remove="wwwroot\lib\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
+    <None Remove="wwwroot\lib\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommuniQueueV2.ServiceDefaults\CommuniQueueV2.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\CommuniQueueV2\CommuniQueueV2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+  </ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <Exec Command="npm run build:css" />
+    </Target>
 
 </Project>

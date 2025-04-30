@@ -1,0 +1,24 @@
+{
+  "name": "communiqueuev2",
+  "version": "1.0.0",
+  "description": "CommuniQueue is a secure, multi-tenant notification SaaS platform for templated message management, dispatch, and tracking over email, SMS, and webhooks.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Battle-Line-Productions/CommuniQueueV2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Battle-Line-Productions/CommuniQueueV2/issues"
+  },
+  "homepage": "https://github.com/Battle-Line-Productions/CommuniQueueV2#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.4",
+    "tailwindcss": "^4.1.4"
+  },
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i CommuniQueueV2.Web/wwwroot/app.css -o CommuniQueueV2.Web/wwwroot/dist.css",
+    "watch:css": "npx @tailwindcss/cli -i CommuniQueueV2.Web/wwwroot/app.css -o CommuniQueueV2.Web/wwwroot/dist.css --watch"
+  }
+}

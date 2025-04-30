@@ -1,7 +1,7 @@
 # CommuniQueue: Platform Architecture & Specification
 
-**Version:** 1.7  
-**Last Updated:** 2025-04-18  
+**Version:** 1.8
+**Last Updated:** 2025-04-27  
 **Author:** Michael Cavanaugh
 
 ---
@@ -73,14 +73,17 @@ CommuniQueue is a secure, multi-tenant notification SaaS for templated message m
 - **API Services:**  
   - Separate .NET 9 API project for client-exposed endpoints (RESTful).
   - This API serves 3rd-party integrations, public documentation, and workload queries.
-- **Background Worker Service:**
-  - Another .NET 9 service handles background/queue processing (consumes messages for sending, retries, status handling, etc.).
+- **Background Processing:**
+  - AWS Lambda function handles background/queue processing (consumes messages from SQS for sending, retries, status handling, etc.).
+  - Implemented as a .NET 9 Lambda function that is triggered by SQS events.
+  - Each Lambda invocation processes one or more messages from the SQS queue depending on batch configuration.
 - **Shared Libraries:**  
   - Common business logic, data models, and utility code are structured in shared libraries, referenced by all projects.
 - **Containerization:**  
-  - Each service (UI, API, Worker) is containerized using Docker for deployment, scaling, and local development parity.
+  - UI and API services are containerized using Docker for deployment, scaling, and local development parity.
+  - Lambda function is deployed directly as a .NET Assembly.
 - **Solution/Orchestration:**
-  - All deployable projects (UI, API, Worker, shared libraries) are organized within a single .NET Aspire solution file at the root of the monorepo. 
+  - All deployable projects (UI, API, Lambda, shared libraries) are organized within a single .NET Aspire solution file at the root of the monorepo. 
   - dotnet Aspire is used for orchestration; offers unified local setup, discovery, health checking, common configuration, and is the foundation for integrating service dependencies (e.g., local queue, database, test environment coordination).
   - Each deployable is a project in the single solution, and Aspire orchestrates their inter-dependencies.
 
@@ -106,10 +109,13 @@ CommuniQueue is a secure, multi-tenant notification SaaS for templated message m
   - AWS is the primary cloud provider for all core infrastructure.
   - Regions, backup, and storage settings TBA (default: US regional).
 - **Compute/Hosting:**  
-  - **AWS App Runner** used for hosting containerized Blazor Server app, API, and background worker.
+  - **AWS App Runner** used for hosting containerized Blazor Server app and API.
     - App Runner handles scaling, health checks, networking, domain SSL, and rolling deploys.
-    - All services deployed via Docker images.
+    - Services deployed via Docker images.
     - Backend services may be split for scale/performance or hosted together for simplicity.
+  - **AWS Lambda** for background processing of SQS messages.
+    - Serverless execution model with automatic scaling based on queue depth.
+    - Configured with appropriate memory, timeout, and concurrency settings.
   - **Static/Asset Storage:**  
     - AWS S3 for logs/files/assets (if needed).
     - CloudFront used for CDN/caching if necessary.
@@ -117,23 +123,23 @@ CommuniQueue is a secure, multi-tenant notification SaaS for templated message m
   - PostgreSQL (AWS RDS or Aurora Serverless as default managed option).
   - All entities use GUID v7 as PKs for scalability and global uniqueness.
 - **Container Management:**  
-  - Docker for local dev and CI/CD.
-    - Multi-stage Dockerfiles for each service (UI, API, Worker) for minimal images.
+  - Docker for local dev and CI/CD (for UI and API services).
+    - Multi-stage Dockerfiles for each service (UI, API) for minimal images.
     - Default docker-compose for developer bootstrapping.
     - Registry: AWS ECR for publishing images.
 - **Queueing/Background Processing:**  
-  - Design assumes use of managed message queue (e.g., AWS SQS) for decoupling the message "Send" API from the actual background message delivery worker.
-  - Queue consumer processes send, retry, webhooks, status polling, and updates the main application DB.
+  - AWS SQS for decoupling the message "Send" API from the actual background message delivery.
+  - AWS Lambda function triggered by SQS events processes messages for sending, retry, webhooks, status polling, and updates the main application DB.
 
 ### CI/CD Pipeline
 
 - Source is in git (flow and branching model TBA).
-- Docker images built and tested per-service.
+- Docker images built and tested for UI/API services.
+- Lambda function built and packaged as .NET assembly.
 - Deployment to AWS via GitHub Actions, AWS CodePipeline, or other modern CI/CD runner.
 - Environment-specific configs/secrets managed by AWS SSM or Secrets Manager.
 
 ### Infrastructure Diagram (textual)
-
 ```
 [Client Browser] 
    | 
@@ -144,12 +150,13 @@ CommuniQueue is a secure, multi-tenant notification SaaS for templated message m
 [Postgres RDS/Aurora]                      [AWS SQS/Queue] 
                                                   | 
                                                   v
-                                   [Worker Service Container: processes messages,
+                                   [AWS Lambda: processes SQS events,
                                     integrates with SendGrid, Twilio, webhooks, and 
                                     updates NotificationTracking/entities]
 
 [Auth0 cloud service] handles all signin and token issuance for UI & API.
-[AWS App Runner] deploys and manages all containers for UI, API, Worker.
+[AWS App Runner] deploys and manages containers for UI and API.
+[AWS Lambda] handles background processing from SQS queue.
 [S3] and [CloudFront] used for any exported data, logs, or large asset hosting.
 ```
 
@@ -223,7 +230,7 @@ CommuniQueue is a secure, multi-tenant notification SaaS for templated message m
 - API Keys per-tenant, multiple allowed, full expiry/rotation support, explicit allowed scopes (send, preview, fetch status, etc.)
 
 ### Notification Delivery & Tracking
-- "Send" calls validate, enqueue in background (AWS SQS or equivalent); status available via API.
+- "Send" calls validate, enqueue in background (AWS SQS); status available via API.
 - Tracking/metrics on sent/failed/test status, exportable prior to retention expiry. Some metadata retained for long-term metrics even after detailed purge for compliance.
 
 ### Subscription and Coupons
@@ -511,19 +518,21 @@ public class EnterprisePlanOverride {
 
 ## 7. API Specification (Outline)
 
-Base API prefix: `/api/v1`
+Base API prefix: /api/v1
 
 ### Auth
 - All API (except public docs/health) requires Auth0 JWT or a valid API key.
 
 ### RBAC/Access
 - Endpoints validate scope per user AND per API key.
-- “Deny” hides the resource and children in all listings.
+- "Deny" hides the resource and children in all listings.
 
 ### Example Endpoints
 
 #### Tenant/Org
-```http
+
+```
+http
 POST   /api/v1/tenants                 // create new tenant
 GET    /api/v1/tenants                 // list available to user
 GET    /api/v1/tenants/{id}            // view tenant dashboard/info
@@ -534,7 +543,9 @@ GET    /api/v1/tenants/{id}/rback      // query effective access matrix
 ```
 
 #### Projects
-```http
+
+```
+http
 POST   /api/v1/projects                // create
 GET    /api/v1/projects/{id}           // details
 PUT    /api/v1/projects/{id}/role      // assign/override project roles
@@ -542,7 +553,9 @@ DELETE /api/v1/projects/{id}
 ```
 
 #### Containers
-```http
+
+```
+http
 POST   /api/v1/containers
 GET    /api/v1/containers/{id}
 PUT    /api/v1/containers/{id}/role
@@ -550,7 +563,8 @@ DELETE /api/v1/containers/{id}
 ```
 
 #### Templates
-```http
+```
+http
 POST   /api/v1/templates
 GET    /api/v1/templates/{id}
 PUT    /api/v1/templates/{id}
@@ -561,7 +575,9 @@ GET    /api/v1/templates/{id}/versions // history/list
 ```
 
 #### Sending/Preview/Tracking
-```http
+
+```
+http
 POST   /api/v1/send                    // enqueue send
 POST   /api/v1/preview                 // render template/variables, no send
 GET    /api/v1/notifications/{id}/status
@@ -570,7 +586,9 @@ GET    /api/v1/notifications/export    // per plan; only non-PII fields
 ```
 
 #### Subscription and Billing
-```http
+
+```
+http
 GET    /api/v1/subscription
 POST   /api/v1/subscription/change     // upgrade/downgrade
 POST   /api/v1/subscription/enterprise-overrides // set enterprise per-tenant
@@ -580,7 +598,9 @@ POST   /api/v1/coupons/remove
 ```
 
 #### Admin/SuperAdmin
-```http
+
+```
+http
 GET    /api/v1/admin/audit-trail
 POST   /api/v1/admin/impersonate
 ```
@@ -589,7 +609,8 @@ POST   /api/v1/admin/impersonate
 
 ## 8. ERD (Pseudo-Graphviz Style, Key Relations)
 
-```mermaid
+```
+mermaid
 erDiagram
     USER ||--o{ TENANTUSERMAP : maps
     TENANT ||--o{ TENANTUSERMAP : contains
@@ -631,9 +652,9 @@ erDiagram
 - Templates can be edited, promoted, or cloned.
 
 #### 9.4 Sending/Tracking
-- Send endpoint validates permissions, enqueues message, returns tracking ID.
-- NotificationTracking updated by background sender.
-- Debug audit (delivery detail, provider info, response, status, retry count).
+- Send endpoint validates permissions, enqueues message in SQS, returns tracking ID.
+- AWS Lambda function processes SQS messages and updates NotificationTracking.
+- Debug audit (delivery detail, provider info, response, status, retry count) stored by Lambda.
 
 #### 9.5 Subscription/Billing
 - All allowances stored per-tenant.
@@ -652,35 +673,39 @@ erDiagram
 ### Logging Design and Practice
 
 - **Logging Approach:**
-  - All application code uses .NET's built-in `ILogger` abstraction.
+  - All application code uses .NET's built-in ILogger abstraction.
   - Enrich logs with: timestamp, log level, message, correlationId (created per incoming request and propagated), userId (if authenticated), tenantId (where applicable), operation or feature context, and service name.
   - Middleware at API boundaries ensures a correlationId is created or propagated for each request (incoming HTTP, outgoing HTTP requests, queue messages).
-  - For multi-service workflows (ex: message send -> background processing), the correlationId is passed as metadata in SQS messages, headers, and anywhere actions span boundaries.
+  - For multi-service workflows (ex: message send -> Lambda processing), the correlationId is passed as metadata in SQS messages, headers, and anywhere actions span boundaries.
 - **Logging Configuration:**
   - Local/dev: logs written to console and optionally file sink.
   - Production: logs exported to AWS CloudWatch Logs.
   - Aspire orchestrates, standardizes, and synchronizes service-level logging configuration.
+  - Lambda logs automatically sent to CloudWatch Logs with additional context from the Lambda execution environment.
   - Potential use of [Serilog](https://serilog.net/) (with enrichers) or [OpenTelemetry](https://opentelemetry.io/) for enhanced structured logging and traces, especially for cross-service correlation.
 - **Log Retention:**
   - Local/staging logs retained 7-30 days.
   - Production logs kept at least 90 days (configurable per legal/compliance/audit needs).
 - **Example Log Format (JSON):**
-    ```
-    {
-      "timestamp": "2025-04-18T13:14:29Z",
-      "level": "Information",
-      "message": "Email sent successfully.",
-      "correlationId": "a5d4d1ad-ac12-432c-b78c-eacd4a2c4758",
-      "userId": "180a45b7-8889-4851-93a7-998d64a92129",
-      "tenantId": "4e26a80a-7e5d-4e79-bba4-e12143f63365",
-      "operation": "SendNotification",
-      "service": "WorkerService",
-      "provider": "SendGrid"
-    }
-    ```
+
+ ```json   
+{
+  "timestamp": "2025-04-18T13:14:29Z",
+  "level": "Information",
+  "message": "Email sent successfully.",
+  "correlationId": "a5d4d1ad-ac12-432c-b78c-eacd4a2c4758",
+  "userId": "180a45b7-8889-4851-93a7-998d64a92129",
+  "tenantId": "4e26a80a-7e5d-4e79-bba4-e12143f63365",
+  "operation": "SendNotification",
+  "service": "LambdaFunction",
+  "provider": "SendGrid"
+}
+```
+
 - **Traceability:**
   - Each event/action log can be tied to a specific request or operation across any number of services.
   - All log-backed events/actions must reference the originating correlationId for easy diagnostics, debugging, and auditing. 
+  - Lambda receives correlationId from SQS message attributes and propagates it to all logs and downstream service calls.
   - Down the road, pursue distributed tracing and OpenTelemetry collector support to enable deep tracing, performance monitoring, and easier debug of cross-service issues.
 
 ---
@@ -698,12 +723,13 @@ erDiagram
 - **Widget Dashboard:** 
     - Blazor UI to include summary tiles, bar/line charts for trends, filter bars
 - **Data Aggregation:**
-    - Use NotificationTracking for raw records; nightly/rolling jobs performed by worker aggregate into summary tables (e.g., per-tenant, per-project/day/month, per-message-type).
+    - Use NotificationTracking for raw records; nightly/rolling jobs performed by Lambda aggregate into summary tables (e.g., per-tenant, per-project/day/month, per-message-type).
 - **API Design:**
-    - `/api/v1/metrics/summary?range=last30days&type=email`
-    - `/api/v1/metrics/widget?tenantId=123&filter=success&period=last24h`
+    - /api/v1/metrics/summary?range=last30days&type=email
+    - /api/v1/metrics/widget?tenantId=123&filter=success&period=last24h
 - **Proposed Metric Model Example:**
-    ```csharp
+    
+```csharp
     public class MetricAggregate {
         public Guid TenantId { get; set; }
         public DateTime PeriodStart { get; set; }
@@ -715,7 +741,8 @@ erDiagram
         public string? ProjectName { get; set; }
         public string? User { get; set; }
     }
-    ```
+```
+
 - **Frontend:**
     - Dashboard with widgets and trend visualizations. Likely will use Blazor-compatible charting library (ChartJS, ApexCharts).
     - Filter widgets for status, type, time window, and more.
@@ -757,7 +784,7 @@ erDiagram
 
 ### Advanced Templating & Delivery Features
 - **Template Variables UI:** Visual editor and variable testing (live validation/preview), variable history and suggestions.
-- **Template Approval Flows:** Add stage gating for “Needs Review,” “Approval,” and “Locked” states.
+- **Template Approval Flows:** Add stage gating for "Needs Review," "Approval," and "Locked" states.
 - **A/B Testing:** Support for testing notification variants and tracking open/click/conversion lift.
 - **Scheduling/Future Sends:** Specify message jobs for future time windows, recurring sends or drip campaigns.
 - **Dynamic Attachment Support:** File asset storage and securely attach (link or inline) documents/images to outgoing messages.
@@ -765,13 +792,13 @@ erDiagram
 ### Security & Compliance
 - **Custom Domain & DKIM/SPF Management:** Let paid tenants provide their own sender domains, manage DNS records, and validate with SendGrid.
 - **End-to-end Encryption for Sensitive Payloads/PII:** Encrypt message contents and attachments at rest and optionally in transit.
-- **Granular Data Retention/Legal Hold Policies:** Let tenants customize retention windows and request “freeze” for audit/legal.
+- **Granular Data Retention/Legal Hold Policies:** Let tenants customize retention windows and request "freeze" for audit/legal.
 
 ### Administrative Capabilities
 - **Usage Billing Portal:** Full usage-based billing, downloadable invoices, and payment integration (Stripe/ACH/Credit Card).
 - **SSO/SAML/SCIM Support for Large Tenants.**
 - **Bulk User Management:** CSV import/export for contacts, access, and template data.
-- **Custom Branding:** White label UI with tenant-specific logo/colors, email footers, and “from” domains.
+- **Custom Branding:** White label UI with tenant-specific logo/colors, email footers, and "from" domains.
 
 ### Developer & API Experience
 - **OpenAPI/Swagger-powered developer portal:** Self-serve API key management, live docs, and test calls.
@@ -806,3 +833,4 @@ erDiagram
 - 2025-04-18: Aspire orchestration, monorepo/solution pattern added.
 - 2025-04-18: Metric reporting, dashboard widgets, and analytic aggregation described for future effort.
 - 2025-04-18: SuperAdmin impersonation supported and described.
+- 2025-04-27: Updated background processing to use AWS Lambda function that reads from SQS queue via Lambda events instead of a containerized worker service.

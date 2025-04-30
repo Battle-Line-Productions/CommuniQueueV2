@@ -1,0 +1,32 @@
+@page "/StatusCode/500"
+<main class="mx-auto flex w-full max-w-7xl flex-auto flex-col justify-center px-6 py-24 sm:py-64 lg:px-8">
+    <div class="text-center">
+        <!-- Optional illustrative icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+
+        <p class="mt-4 text-base/8 font-semibold text-red-600">500</p>
+        <h1 class="mt-2 text-5xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Internal Server Error</h1>
+        <p class="mt-6 text-lg font-medium text-gray-500 sm:text-xl/8">
+            Oops — something went wrong on our end. 
+            Our engineers have been notified, but you can try again or contact support if the problem persists.
+        </p>
+
+        <div class="mt-10 flex justify-center space-x-4">
+            <a 
+                href="/" 
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+                Go back home
+            </a>
+@*             <a 
+                href="/support" 
+                class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-semibold rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+                Contact Support
+            </a> *@
+        </div>
+    </div>
+</main>

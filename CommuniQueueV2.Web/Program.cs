@@ -1,8 +1,18 @@
+using CommuniQueueV2.Middleware;
 using CommuniQueueV2.ServiceDefaults;
 using CommuniQueueV2.Web;
 using CommuniQueueV2.Web.Components;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, loggerConfig) =>
+{
+    loggerConfig
+        .ReadFrom.Configuration(ctx.Configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+});
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
@@ -22,6 +32,11 @@ builder.Services.AddHttpClient<WeatherApiClient>(client =>
 
 var app = builder.Build();
 
+app.UseMiddleware<SecurityHeadersMiddleware>();
+app.UseMiddleware<CorrelationTokenMiddleware>();
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
@@ -31,15 +46,19 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAntiforgery();
+app.UseStaticFiles();
 
 app.UseOutputCache();
 
 app.MapStaticAssets();
+
+app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
+
+app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.MapDefaultEndpoints();
 
-app.Run();
+await app.RunAsync();
