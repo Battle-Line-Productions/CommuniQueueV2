@@ -1,6 +1,8 @@
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
+using CommuniQueueV2.EventProcessor.Interfaces;
+using Microsoft.Extensions.Logging;
 
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -8,40 +10,41 @@ using Amazon.Lambda.SQSEvents;
 
 namespace CommuniQueueV2.EventProcessor;
 
-public class Function
+public class Function(ILogger<Function> logger, IMessageProcessor messageProcessor)
 {
-    /// <summary>
-    /// Default constructor. This constructor is used by Lambda to construct the instance. When invoked in a Lambda environment
-    /// the AWS credentials will come from the IAM role associated with the function and the AWS region will be set to the
-    /// region the Lambda function is executed in.
-    /// </summary>
-    public Function()
-    {
-
-    }
-
-
-    /// <summary>
-    /// This method is called for every Lambda invocation. This method takes in an SQS event object and can be used 
-    /// to respond to SQS messages.
-    /// </summary>
-    /// <param name="evnt">The event for the Lambda function handler to process.</param>
-    /// <param name="context">The ILambdaContext that provides methods for logging and describing the Lambda environment.</param>
-    /// <returns></returns>
     [LambdaFunction]
     public async Task FunctionHandler(SQSEvent evnt, ILambdaContext context)
     {
-        foreach(var message in evnt.Records)
+        logger.LogInformation(
+            "Lambda Invocation: {FunctionName} with {MessageCount} messages; AwsRequestId={AwsRequestId}",
+            context.FunctionName,
+            evnt.Records.Count,
+            context.AwsRequestId
+        );
+
+        foreach (var message in evnt.Records)
         {
-            await ProcessMessageAsync(message, context);
+            try
+            {
+                await messageProcessor.ProcessAsync(message, context);
+            }
+            catch (Exception ex)
+            {
+                // Log at function level but don't rethrow - this allows processing to continue for other messages
+                logger.LogError(ex,
+                    "Unhandled Exception: {MessageId}; ErrorType={ErrorType}; ErrorMessage={ErrorMessage}",
+                    message.MessageId,
+                    ex.GetType().Name,
+                    ex.Message
+                );
+            }
         }
-    }
 
-    private async Task ProcessMessageAsync(SQSEvent.SQSMessage message, ILambdaContext context)
-    {
-        context.Logger.LogInformation($"Processed message {message.Body}");
-
-        // TODO: Do interesting work based on the new message
-        await Task.CompletedTask;
+        logger.LogInformation(
+            "Lambda Completed: {FunctionName}; AwsRequestId={AwsRequestId}; RemainingTime={RemainingTime}ms",
+            context.FunctionName,
+            context.AwsRequestId,
+            context.RemainingTime.TotalMilliseconds
+        );
     }
 }
