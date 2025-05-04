@@ -1,3 +1,4 @@
+using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 
@@ -27,6 +28,7 @@ public class Function
     /// <param name="evnt">The event for the Lambda function handler to process.</param>
     /// <param name="context">The ILambdaContext that provides methods for logging and describing the Lambda environment.</param>
     /// <returns></returns>
+    [LambdaFunction]
     public async Task FunctionHandler(SQSEvent evnt, ILambdaContext context)
     {
         foreach(var message in evnt.Records)
