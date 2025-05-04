@@ -1,0 +1,43 @@
+cloud-architecture-diagram
+
+title CommuniQueue Platform Architecture
+
+// External Clients and Authentication
+Client Browser [icon: user]
+Auth0 [icon: auth0]
+
+// Deployment: Containers hosted on AWS App Runner
+AWS App Runner [icon: aws-app-runner] {
+  Blazor Server Container [icon: monitor, label: "Blazor UI"]
+  API Service Container [icon: server, label: "API Service"]
+}
+
+// Backend Services
+Postgres DB [icon: aws-rds, label: "Postgres/Aurora"]
+AWS SQS [icon: aws-sqs]
+AWS Lambda [icon: aws-lambda]
+
+// External Integrations
+SendGrid [icon: sendgrid]
+Twilio [icon: twilio]
+
+// Static Assets and CDN
+S3 Storage [icon: aws-s3]
+CloudFront CDN [icon: aws-cloudfront]
+
+// Connections
+Client Browser > Blazor Server Container: browse & interact
+Blazor Server Container > API Service Container: API calls
+Client Browser > Auth0: request authentication
+
+API Service Container > Postgres DB: "data read/write"
+API Service Container > AWS SQS: enqueue messages
+
+AWS SQS > AWS Lambda: trigger processing
+AWS Lambda > SendGrid: send emails
+AWS Lambda > Twilio: send SMS
+
+Blazor Server Container > S3 Storage: serve assets
+S3 Storage > CloudFront CDN: cache & deliver
+Blazor Server Container < Auth0: verify token
+
