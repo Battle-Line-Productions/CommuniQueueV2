@@ -1,7 +1,15 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+var postgres = builder.AddPostgres("postgres").WithDataVolume(isReadOnly: false).WithPgAdmin();
+var communiqueueDb = postgres.AddDatabase("communiqueuedb");
+
+
 // Add API service
-var apiService = builder.AddProject<Projects.CommuniQueueV2_ApiService>("apiservice");
+var apiService = builder.AddProject<Projects.CommuniQueueV2_ApiService>("apiservice")
+    .WithExternalHttpEndpoints()
+    .WithReference(communiqueueDb)
+    .WaitFor(postgres)
+    .WaitFor(communiqueueDb);
 
 // Add Lambda processor as a container
 //var lambdaProcessor = builder.AddContainer("eventprocessor", "communiquev2-processor")

@@ -1,8 +1,11 @@
+using System;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using CommuniQueueV2;
 using CommuniQueueV2.Middleware;
 using CommuniQueueV2.ServiceDefaults;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -77,6 +80,14 @@ builder.Services.AddOpenApi(options =>
         return Task.CompletedTask;
     });
 });
+
+builder.AddNpgsqlDbContext<CommuniQueueDbContext>("communiqueuedb", null,
+    options =>
+    {
+        options.UseSnakeCaseNamingConvention();
+        options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging();
+    });
 
 var app = builder.Build();
 
