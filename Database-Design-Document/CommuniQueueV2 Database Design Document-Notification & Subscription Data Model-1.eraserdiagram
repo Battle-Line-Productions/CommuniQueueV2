@@ -1,0 +1,244 @@
+entity-relationship-diagram
+
+ // title
+title Notification & Subscription Data Model
+
+// define tables
+user [icon: user, color: yellow]{
+  id Guid pk
+  createdDateTime DateTime
+  updatedDateTime DateTime
+  email string
+  ssoId string
+  isActive bool
+  isSuperAdmin bool
+  firstName string
+  lastName string
+}
+
+tenant [icon: home, color: blue]{
+  id Guid pk
+  createdDateTime DateTime
+  updatedDateTime DateTime
+  name string
+  description string
+  ownerUserId Guid
+  status StatusType
+}
+
+tenantusermap [icon: users, color: lightblue]{
+  id Guid pk
+  userId Guid
+  tenantId Guid
+  role RoleType
+  status TenantMembershipStatusType
+  createdDateTime DateTime
+  updatedDateTime DateTime
+}
+
+accesscontrolentry [icon: shield, color: pink]{
+  id Guid pk
+  entityType AccessControlledEntityType
+  entityId Guid
+  userId Guid
+  role RoleType
+  createdDateTime DateTime
+  updatedDateTime DateTime
+}
+
+project [icon: folder, color: cyan]{
+  id Guid pk
+  name string
+  description string?
+  tenantId Guid
+  createdDateTime DateTime
+  updatedDateTime DateTime
+}
+
+container [icon: box, color: orange]{
+  id Guid pk
+  name string
+  description string?
+  parentId Guid?
+  projectId Guid
+  depth int
+  createdDateTime DateTime
+  updatedDateTime DateTime
+}
+
+template [icon: file-text, color: purple]{
+  id Guid pk
+  name string
+  projectId Guid
+  containerId Guid
+  type NotificationType
+  state StateType
+  usageType UsageType
+  createdDateTime DateTime
+  updatedDateTime DateTime
+}
+
+templateversion [icon: file, color: teal]{
+  id Guid pk
+  templateId Guid
+  versionNumber int
+  subject string
+  body string
+  from string
+  createdDateTime DateTime
+  updatedDateTime DateTime
+}
+
+templaterecipient [icon: mail, color: red]{
+  id Guid pk
+  templateVersionId Guid
+  type RecipientType
+  value string
+}
+
+notificationtracking [icon: bell, color: lightgreen]{
+  id Guid pk
+  tenantId Guid
+  templateId Guid
+  templateVersionId Guid
+  type NotificationType
+  state StateType
+  usageType UsageType
+  createdDateTime DateTime
+  updatedDateTime DateTime
+  isTest bool
+  subject string
+  body string
+  from string
+}
+
+trackingrecipient [icon: user-check, color: lightblue]{
+  id Guid pk
+  notificationTrackingId Guid
+  type RecipientType
+  value string
+}
+
+notificationtrackingdebug [icon: code, color: gray]{
+  id Guid pk
+  notificationTrackingId Guid
+  debugInfo JSONB
+  debugSource ProviderType
+  status DeliveryStatus
+  attemptCount int
+}
+
+tenantapikey [icon: key, color: gold]{
+  id Guid pk
+  keyHash string
+  tenantId Guid
+  createdDateTime DateTime
+  updatedDateTime DateTime
+  startDate DateTime
+  endDate DateTime
+  isExpired bool
+  scopes List<string>
+}
+
+subscriptionplan [icon: dollar-sign, color: green]{
+  id Guid pk
+  name string
+  tier SubscriptionTier
+  pricePerMonth decimal
+  pricePerYear decimal
+  allowedTenants int
+  allowedProjects int
+  allowedTemplates int
+  allowedTemplateVersions int
+  emailSendLimitPerMonth int
+  apiRateLimitPerMinute int
+  apiThrottlingBurst int
+  retentionDays int
+  effectiveFrom DateTime
+  effectiveTo DateTime?
+}
+
+tenantsubscription [icon: credit-card, color: blue]{
+  id Guid pk
+  tenantId Guid
+  subscriptionPlanId Guid
+  startDate DateTime
+  endDate DateTime
+  isActive bool
+  finalPricePerMonth decimal
+  couponCode string?
+  enterpriseOverridesId Guid?
+}
+
+coupon [icon: tag, color: red]{
+  id Guid pk
+  code string
+  description string
+  flatAmountOff decimal?
+  percentageOff decimal?
+  expireDate DateTime
+  benefitUntil DateTime?
+}
+
+tenantcoupon [icon: gift, color: cyan]{
+  id Guid pk
+  tenantId Guid
+  couponId Guid
+  dateApplied DateTime
+  benefitUntil DateTime?
+}
+
+enterpriseplanoverride [icon: settings, color: darkgray]{
+  id Guid pk
+  tenantId Guid
+  allowedTenantsOverride int?
+  allowedProjectsOverride int?
+  allowedTemplatesOverride int?
+  allowedTemplateVersionsOverride int?
+  emailSendLimitPerMonthOverride int?
+  apiRateLimitPerMinuteOverride int?
+  apiThrottlingBurstOverride int?
+  retentionDaysOverride int?
+  smsSendLimitPerMonthOverride int?
+  webhookLimitPerMonthOverride int?
+  extraChargePerUnit decimal?
+  notes string?
+}
+
+// define relationships
+tenantusermap.userId > user.id
+tenantusermap.tenantId > tenant.id
+
+tenant.ownerUserId > user.id
+
+project.tenantId > tenant.id
+
+container.projectId > project.id
+container.parentId > container.id
+
+template.projectId > project.id
+template.containerId > container.id
+
+templateversion.templateId > template.id
+
+templaterecipient.templateVersionId > templateversion.id
+
+notificationtracking.tenantId > tenant.id
+notificationtracking.templateId > template.id
+notificationtracking.templateVersionId > templateversion.id
+
+trackingrecipient.notificationTrackingId > notificationtracking.id
+notificationtrackingdebug.notificationTrackingId > notificationtracking.id
+
+tenantapikey.tenantId > tenant.id
+
+tenantsubscription.tenantId > tenant.id
+tenantsubscription.subscriptionPlanId - subscriptionplan.id
+tenantsubscription.enterpriseOverridesId - enterpriseplanoverride.id
+
+tenantcoupon.tenantId > tenant.id
+tenantcoupon.couponId - coupon.id
+
+accesscontrolentry.userId > user.id
+ 
+
