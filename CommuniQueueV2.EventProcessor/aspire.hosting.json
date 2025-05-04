@@ -1,0 +1,13 @@
+{
+    "profiles": {
+      "aspire-hosted": {
+        "commandName": "Project",
+        "launchBrowser": false,
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "AWS_LAMBDA_RUNTIME_API": "host.docker.internal:8080"
+        }
+      }
+    }
+  }
+  
