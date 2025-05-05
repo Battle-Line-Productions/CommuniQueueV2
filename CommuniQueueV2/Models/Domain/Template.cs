@@ -1,4 +1,4 @@
-﻿using CommuniQueueV2.Models.Enums;
+using CommuniQueueV2.Models.Enums;
 
 namespace CommuniQueueV2.Models.Domain;
 
@@ -18,4 +18,5 @@ public record Template
     public Project Project { get; set; } = null!;
     public Container Container { get; set; } = null!;
     public ICollection<TemplateVersion> Versions { get; set; } = new List<TemplateVersion>();
+    public ICollection<NotificationTracking> NotificationTrackings { get; set; } = new List<NotificationTracking>();
 }

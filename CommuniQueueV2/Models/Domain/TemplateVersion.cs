@@ -1,4 +1,4 @@
-﻿namespace CommuniQueueV2.Models.Domain;
+namespace CommuniQueueV2.Models.Domain;
 
 public record TemplateVersion
 {
@@ -14,4 +14,5 @@ public record TemplateVersion
     // Navigation properties
     public Template Template { get; set; } = null!;
     public ICollection<TemplateRecipient> Recipients { get; set; } = new List<TemplateRecipient>();
+    public ICollection<NotificationTracking> NotificationTrackings { get; set; } = new List<NotificationTracking>();
 }

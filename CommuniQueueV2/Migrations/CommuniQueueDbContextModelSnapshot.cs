@@ -53,18 +53,11 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id1");
-
                     b.HasKey("Id")
                         .HasName("pk_access_control_entries");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_access_control_entries_user_id");
-
-                    b.HasIndex("UserId1")
-                        .HasDatabaseName("ix_access_control_entries_user_id1");
 
                     b.HasIndex("EntityType", "EntityId")
                         .HasDatabaseName("ix_access_control_entries_entity_type_entity_id");
@@ -100,17 +93,9 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("parent_id");
 
-                    b.Property<Guid?>("ParentId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("parent_id1");
-
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid")
                         .HasColumnName("project_id");
-
-                    b.Property<Guid>("ProjectId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("project_id1");
 
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("timestamp with time zone")
@@ -122,14 +107,8 @@ namespace CommuniQueueV2.Migrations
                     b.HasIndex("ParentId")
                         .HasDatabaseName("ix_containers_parent_id");
 
-                    b.HasIndex("ParentId1")
-                        .HasDatabaseName("ix_containers_parent_id1");
-
                     b.HasIndex("ProjectId")
                         .HasDatabaseName("ix_containers_project_id");
-
-                    b.HasIndex("ProjectId1")
-                        .HasDatabaseName("ix_containers_project_id1");
 
                     b.ToTable("containers", (string)null);
                 });
@@ -284,25 +263,13 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("template_id");
 
-                    b.Property<Guid>("TemplateId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("template_id1");
-
                     b.Property<Guid>("TemplateVersionId")
                         .HasColumnType("uuid")
                         .HasColumnName("template_version_id");
 
-                    b.Property<Guid>("TemplateVersionId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("template_version_id1");
-
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
-
-                    b.Property<Guid>("TenantId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_id1");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer")
@@ -319,20 +286,11 @@ namespace CommuniQueueV2.Migrations
                     b.HasKey("Id")
                         .HasName("pk_notification_trackings");
 
-                    b.HasIndex("TemplateId1")
-                        .HasDatabaseName("ix_notification_trackings_template_id1");
-
                     b.HasIndex("TemplateVersionId")
                         .HasDatabaseName("ix_notification_trackings_template_version_id");
 
-                    b.HasIndex("TemplateVersionId1")
-                        .HasDatabaseName("ix_notification_trackings_template_version_id1");
-
                     b.HasIndex("TenantId")
                         .HasDatabaseName("ix_notification_trackings_tenant_id");
-
-                    b.HasIndex("TenantId1")
-                        .HasDatabaseName("ix_notification_trackings_tenant_id1");
 
                     b.HasIndex("TemplateId", "TemplateVersionId")
                         .HasDatabaseName("ix_notification_trackings_template_id_template_version_id");
@@ -364,10 +322,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
 
-                    b.Property<Guid>("TenantId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_id1");
-
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_date_time");
@@ -377,9 +331,6 @@ namespace CommuniQueueV2.Migrations
 
                     b.HasIndex("TenantId")
                         .HasDatabaseName("ix_projects_tenant_id");
-
-                    b.HasIndex("TenantId1")
-                        .HasDatabaseName("ix_projects_tenant_id1");
 
                     b.ToTable("projects", (string)null);
                 });
@@ -468,10 +419,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("container_id");
 
-                    b.Property<Guid>("ContainerId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("container_id1");
-
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date_time");
@@ -484,10 +431,6 @@ namespace CommuniQueueV2.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid")
                         .HasColumnName("project_id");
-
-                    b.Property<Guid>("ProjectId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("project_id1");
 
                     b.Property<int>("State")
                         .HasColumnType("integer")
@@ -511,14 +454,8 @@ namespace CommuniQueueV2.Migrations
                     b.HasIndex("ContainerId")
                         .HasDatabaseName("ix_templates_container_id");
 
-                    b.HasIndex("ContainerId1")
-                        .HasDatabaseName("ix_templates_container_id1");
-
                     b.HasIndex("ProjectId")
                         .HasDatabaseName("ix_templates_project_id");
-
-                    b.HasIndex("ProjectId1")
-                        .HasDatabaseName("ix_templates_project_id1");
 
                     b.ToTable("templates", (string)null);
                 });
@@ -534,10 +471,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("template_version_id");
 
-                    b.Property<Guid>("TemplateVersionId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("template_version_id1");
-
                     b.Property<int>("Type")
                         .HasColumnType("integer")
                         .HasColumnName("type");
@@ -552,9 +485,6 @@ namespace CommuniQueueV2.Migrations
 
                     b.HasIndex("TemplateVersionId")
                         .HasDatabaseName("ix_template_recipients_template_version_id");
-
-                    b.HasIndex("TemplateVersionId1")
-                        .HasDatabaseName("ix_template_recipients_template_version_id1");
 
                     b.ToTable("template_recipients", (string)null);
                 });
@@ -589,10 +519,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("template_id");
 
-                    b.Property<Guid>("TemplateId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("template_id1");
-
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_date_time");
@@ -606,9 +532,6 @@ namespace CommuniQueueV2.Migrations
 
                     b.HasIndex("TemplateId")
                         .HasDatabaseName("ix_template_versions_template_id");
-
-                    b.HasIndex("TemplateId1")
-                        .HasDatabaseName("ix_template_versions_template_id1");
 
                     b.HasIndex("TemplateId", "VersionNumber")
                         .IsUnique()
@@ -642,10 +565,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("owner_user_id");
 
-                    b.Property<Guid>("OwnerUserId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("owner_user_id1");
-
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");
@@ -654,14 +573,18 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_date_time");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id")
                         .HasName("pk_tenants");
 
                     b.HasIndex("OwnerUserId")
                         .HasDatabaseName("ix_tenants_owner_user_id");
 
-                    b.HasIndex("OwnerUserId1")
-                        .HasDatabaseName("ix_tenants_owner_user_id1");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_tenants_user_id");
 
                     b.ToTable("tenants", (string)null);
                 });
@@ -703,10 +626,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
 
-                    b.Property<Guid>("TenantId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_id1");
-
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_date_time");
@@ -719,9 +638,6 @@ namespace CommuniQueueV2.Migrations
 
                     b.HasIndex("TenantId")
                         .HasDatabaseName("ix_tenant_api_keys_tenant_id");
-
-                    b.HasIndex("TenantId1")
-                        .HasDatabaseName("ix_tenant_api_keys_tenant_id1");
 
                     b.ToTable("tenant_api_keys", (string)null);
                 });
@@ -741,10 +657,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("coupon_id");
 
-                    b.Property<Guid>("CouponId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("coupon_id1");
-
                     b.Property<DateTime>("DateApplied")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_applied");
@@ -753,21 +665,11 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
 
-                    b.Property<Guid>("TenantId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_id1");
-
                     b.HasKey("Id")
                         .HasName("pk_tenant_coupons");
 
                     b.HasIndex("CouponId")
                         .HasDatabaseName("ix_tenant_coupons_coupon_id");
-
-                    b.HasIndex("CouponId1")
-                        .HasDatabaseName("ix_tenant_coupons_coupon_id1");
-
-                    b.HasIndex("TenantId1")
-                        .HasDatabaseName("ix_tenant_coupons_tenant_id1");
 
                     b.HasIndex("TenantId", "CouponId")
                         .IsUnique()
@@ -795,10 +697,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("enterprise_overrides_id");
 
-                    b.Property<Guid?>("EnterpriseOverridesId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("enterprise_overrides_id1");
-
                     b.Property<decimal>("FinalPricePerMonth")
                         .HasColumnType("numeric")
                         .HasColumnName("final_price_per_month");
@@ -815,17 +713,9 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("subscription_plan_id");
 
-                    b.Property<Guid>("SubscriptionPlanId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("subscription_plan_id1");
-
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
-
-                    b.Property<Guid>("TenantId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_id1");
 
                     b.HasKey("Id")
                         .HasName("pk_tenant_subscriptions");
@@ -833,23 +723,14 @@ namespace CommuniQueueV2.Migrations
                     b.HasIndex("EnterpriseOverridesId")
                         .HasDatabaseName("ix_tenant_subscriptions_enterprise_overrides_id");
 
-                    b.HasIndex("EnterpriseOverridesId1")
-                        .HasDatabaseName("ix_tenant_subscriptions_enterprise_overrides_id1");
-
                     b.HasIndex("IsActive")
                         .HasDatabaseName("ix_tenant_subscriptions_is_active");
 
                     b.HasIndex("SubscriptionPlanId")
                         .HasDatabaseName("ix_tenant_subscriptions_subscription_plan_id");
 
-                    b.HasIndex("SubscriptionPlanId1")
-                        .HasDatabaseName("ix_tenant_subscriptions_subscription_plan_id1");
-
                     b.HasIndex("TenantId")
                         .HasDatabaseName("ix_tenant_subscriptions_tenant_id");
-
-                    b.HasIndex("TenantId1")
-                        .HasDatabaseName("ix_tenant_subscriptions_tenant_id1");
 
                     b.ToTable("tenant_subscriptions", (string)null);
                 });
@@ -877,10 +758,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
 
-                    b.Property<Guid>("TenantId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_id1");
-
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_date_time");
@@ -889,21 +766,11 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id1");
-
                     b.HasKey("Id")
                         .HasName("pk_tenant_user_maps");
 
-                    b.HasIndex("TenantId1")
-                        .HasDatabaseName("ix_tenant_user_maps_tenant_id1");
-
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_tenant_user_maps_user_id");
-
-                    b.HasIndex("UserId1")
-                        .HasDatabaseName("ix_tenant_user_maps_user_id1");
 
                     b.HasIndex("TenantId", "UserId")
                         .HasDatabaseName("ix_tenant_user_maps_tenant_id_user_id");
@@ -922,10 +789,6 @@ namespace CommuniQueueV2.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("notification_tracking_id");
 
-                    b.Property<Guid>("NotificationTrackingId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("notification_tracking_id1");
-
                     b.Property<int>("Type")
                         .HasColumnType("integer")
                         .HasColumnName("type");
@@ -940,9 +803,6 @@ namespace CommuniQueueV2.Migrations
 
                     b.HasIndex("NotificationTrackingId")
                         .HasDatabaseName("ix_tracking_recipients_notification_tracking_id");
-
-                    b.HasIndex("NotificationTrackingId1")
-                        .HasDatabaseName("ix_tracking_recipients_notification_tracking_id1");
 
                     b.ToTable("tracking_recipients", (string)null);
                 });
@@ -1004,49 +864,30 @@ namespace CommuniQueueV2.Migrations
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.AccessControlEntry", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.User", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.User", "User")
+                        .WithMany("AccessControlEntries")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_access_control_entries_users_user_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.User", "User")
-                        .WithMany("AccessControlEntries")
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_access_control_entries_users_user_id1");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.Container", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.Container", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Container", "Parent")
+                        .WithMany("Children")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_containers_containers_parent_id");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.Container", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId1")
-                        .HasConstraintName("fk_containers_containers_parent_id1");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Project", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Project", "Project")
+                        .WithMany("Containers")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_containers_projects_project_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Project", "Project")
-                        .WithMany("Containers")
-                        .HasForeignKey("ProjectId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_containers_projects_project_id1");
 
                     b.Navigation("Parent");
 
@@ -1067,47 +908,26 @@ namespace CommuniQueueV2.Migrations
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.NotificationTracking", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.Template", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Template", "Template")
+                        .WithMany("NotificationTrackings")
                         .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_notification_trackings_templates_template_id");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.Template", "Template")
-                        .WithMany()
-                        .HasForeignKey("TemplateId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_notification_trackings_templates_template_id1");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.TemplateVersion", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.TemplateVersion", "TemplateVersion")
+                        .WithMany("NotificationTrackings")
                         .HasForeignKey("TemplateVersionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_notification_trackings_template_versions_template_version_id");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.TemplateVersion", "TemplateVersion")
-                        .WithMany()
-                        .HasForeignKey("TemplateVersionId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_notification_trackings_template_versions_template_version_i");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
+                        .WithMany("NotificationTrackings")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_notification_trackings_tenants_tenant_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
-                        .WithMany("NotificationTrackings")
-                        .HasForeignKey("TenantId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_notification_trackings_tenants_tenant_id1");
 
                     b.Navigation("Template");
 
@@ -1118,52 +938,31 @@ namespace CommuniQueueV2.Migrations
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.Project", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
+                        .WithMany("Projects")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_projects_tenants_tenant_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
-                        .WithMany("Projects")
-                        .HasForeignKey("TenantId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_projects_tenants_tenant_id1");
 
                     b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.Template", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.Container", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Container", "Container")
+                        .WithMany("Templates")
                         .HasForeignKey("ContainerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_templates_containers_container_id");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.Container", "Container")
+                    b.HasOne("CommuniQueueV2.Models.Domain.Project", "Project")
                         .WithMany("Templates")
-                        .HasForeignKey("ContainerId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_templates_containers_container_id1");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Project", null)
-                        .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_templates_projects_project_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Project", "Project")
-                        .WithMany("Templates")
-                        .HasForeignKey("ProjectId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_templates_projects_project_id1");
 
                     b.Navigation("Container");
 
@@ -1172,109 +971,72 @@ namespace CommuniQueueV2.Migrations
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.TemplateRecipient", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.TemplateVersion", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.TemplateVersion", "TemplateVersion")
+                        .WithMany("Recipients")
                         .HasForeignKey("TemplateVersionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_template_recipients_template_versions_template_version_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.TemplateVersion", "TemplateVersion")
-                        .WithMany("Recipients")
-                        .HasForeignKey("TemplateVersionId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_template_recipients_template_versions_template_version_id1");
 
                     b.Navigation("TemplateVersion");
                 });
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.TemplateVersion", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.Template", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Template", "Template")
+                        .WithMany("Versions")
                         .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_template_versions_templates_template_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Template", "Template")
-                        .WithMany("Versions")
-                        .HasForeignKey("TemplateId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_template_versions_templates_template_id1");
 
                     b.Navigation("Template");
                 });
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.Tenant", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.User", null)
+                    b.HasOne("CommuniQueueV2.Models.Domain.User", "OwnerUser")
                         .WithMany()
                         .HasForeignKey("OwnerUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_tenants_users_owner_user_id");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.User", "OwnerUser")
+                    b.HasOne("CommuniQueueV2.Models.Domain.User", null)
                         .WithMany("OwnedTenants")
-                        .HasForeignKey("OwnerUserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tenants_users_owner_user_id1");
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_tenants_users_user_id");
 
                     b.Navigation("OwnerUser");
                 });
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.TenantApiKey", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
+                        .WithMany("TenantApiKeys")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tenant_api_keys_tenants_tenant_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
-                        .WithMany("TenantApiKeys")
-                        .HasForeignKey("TenantId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tenant_api_keys_tenants_tenant_id1");
 
                     b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.TenantCoupon", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.Coupon", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Coupon", "Coupon")
+                        .WithMany("TenantCoupons")
                         .HasForeignKey("CouponId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tenant_coupons_coupons_coupon_id");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.Coupon", "Coupon")
+                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
                         .WithMany("TenantCoupons")
-                        .HasForeignKey("CouponId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tenant_coupons_coupons_coupon_id1");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", null)
-                        .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tenant_coupons_tenants_tenant_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
-                        .WithMany("TenantCoupons")
-                        .HasForeignKey("TenantId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tenant_coupons_tenants_tenant_id1");
 
                     b.Navigation("Coupon");
 
@@ -1283,44 +1045,25 @@ namespace CommuniQueueV2.Migrations
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.TenantSubscription", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.EnterprisePlanOverride", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.EnterprisePlanOverride", "EnterpriseOverrides")
+                        .WithMany("TenantSubscriptions")
                         .HasForeignKey("EnterpriseOverridesId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_tenant_subscriptions_enterprise_plan_overrides_enterprise_o");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.EnterprisePlanOverride", "EnterpriseOverrides")
+                    b.HasOne("CommuniQueueV2.Models.Domain.SubscriptionPlan", "SubscriptionPlan")
                         .WithMany("TenantSubscriptions")
-                        .HasForeignKey("EnterpriseOverridesId1")
-                        .HasConstraintName("fk_tenant_subscriptions_enterprise_plan_overrides_enterprise_o1");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.SubscriptionPlan", null)
-                        .WithMany()
                         .HasForeignKey("SubscriptionPlanId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_tenant_subscriptions_subscription_plans_subscription_plan_id");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.SubscriptionPlan", "SubscriptionPlan")
+                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
                         .WithMany("TenantSubscriptions")
-                        .HasForeignKey("SubscriptionPlanId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tenant_subscriptions_subscription_plans_subscription_plan_i");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", null)
-                        .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tenant_subscriptions_tenants_tenant_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
-                        .WithMany("TenantSubscriptions")
-                        .HasForeignKey("TenantId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tenant_subscriptions_tenants_tenant_id1");
 
                     b.Navigation("EnterpriseOverrides");
 
@@ -1331,33 +1074,19 @@ namespace CommuniQueueV2.Migrations
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.TenantUserMap", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
+                        .WithMany("TenantUserMaps")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tenant_user_maps_tenants_tenant_id");
 
-                    b.HasOne("CommuniQueueV2.Models.Domain.Tenant", "Tenant")
+                    b.HasOne("CommuniQueueV2.Models.Domain.User", "User")
                         .WithMany("TenantUserMaps")
-                        .HasForeignKey("TenantId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tenant_user_maps_tenants_tenant_id1");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.User", null)
-                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tenant_user_maps_users_user_id");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.User", "User")
-                        .WithMany("TenantUserMaps")
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tenant_user_maps_users_user_id1");
 
                     b.Navigation("Tenant");
 
@@ -1366,19 +1095,12 @@ namespace CommuniQueueV2.Migrations
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.TrackingRecipient", b =>
                 {
-                    b.HasOne("CommuniQueueV2.Models.Domain.NotificationTracking", null)
-                        .WithMany()
+                    b.HasOne("CommuniQueueV2.Models.Domain.NotificationTracking", "NotificationTracking")
+                        .WithMany("Recipients")
                         .HasForeignKey("NotificationTrackingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tracking_recipients_notification_trackings_notification_tra");
-
-                    b.HasOne("CommuniQueueV2.Models.Domain.NotificationTracking", "NotificationTracking")
-                        .WithMany("Recipients")
-                        .HasForeignKey("NotificationTrackingId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_tracking_recipients_notification_trackings_notification_tra1");
 
                     b.Navigation("NotificationTracking");
                 });
@@ -1419,11 +1141,15 @@ namespace CommuniQueueV2.Migrations
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.Template", b =>
                 {
+                    b.Navigation("NotificationTrackings");
+
                     b.Navigation("Versions");
                 });
 
             modelBuilder.Entity("CommuniQueueV2.Models.Domain.TemplateVersion", b =>
                 {
+                    b.Navigation("NotificationTrackings");
+
                     b.Navigation("Recipients");
                 });
 

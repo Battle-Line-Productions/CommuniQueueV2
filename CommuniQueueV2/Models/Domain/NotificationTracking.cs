@@ -1,4 +1,4 @@
-﻿using CommuniQueueV2.Models.Enums;
+using CommuniQueueV2.Models.Enums;
 
 namespace CommuniQueueV2.Models.Domain;
 
