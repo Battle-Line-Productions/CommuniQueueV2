@@ -242,10 +242,12 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
         modelBuilder.Entity<EnterprisePlanOverride>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.HasOne<Tenant>()
-                  .WithMany()
-                  .HasForeignKey(e => e.TenantId)
-                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Tenant)
+                .WithOne(t => t.EnterprisePlanOverride)
+                .HasForeignKey<EnterprisePlanOverride>(e => e.TenantId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             entity.HasIndex(e => e.TenantId).IsUnique();
         });
     }
