@@ -33,6 +33,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
             entity.Property(u => u.Email).IsRequired();
             entity.Property(u => u.SsoId).IsRequired();
             entity.HasIndex(u => u.Email).IsUnique();
+            entity.HasIndex(u => u.SsoId).IsUnique();
         });
 
         // ─── Tenant ───────────────────────────────────────────────────────────────
@@ -43,6 +44,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(t => t.OwnerUserId)
                   .OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(t => t.OwnerUserId);
         });
 
         // ─── TenantUserMap ───────────────────────────────────────────────────────
@@ -57,6 +59,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(tum => tum.TenantId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(tum => new { tum.TenantId, tum.UserId });
         });
 
         // ─── AccessControlEntry ──────────────────────────────────────────────────
@@ -67,6 +70,8 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(ace => ace.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(ace => ace.UserId);
+            entity.HasIndex(ace => new { ace.EntityType, ace.EntityId });
         });
 
         // ─── Project ─────────────────────────────────────────────────────────────
@@ -77,6 +82,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(p => p.TenantId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(p => p.TenantId);
         });
 
         // ─── Container ───────────────────────────────────────────────────────────
@@ -91,6 +97,8 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(c => c.ParentId)
                   .OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(c => c.ProjectId);
+            entity.HasIndex(c => c.ParentId);
         });
 
         // ─── Template ────────────────────────────────────────────────────────────
@@ -105,6 +113,8 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(t => t.ContainerId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(t => t.ProjectId);
+            entity.HasIndex(t => t.ContainerId);
         });
 
         // ─── TemplateVersion ─────────────────────────────────────────────────────
@@ -115,6 +125,8 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(tv => tv.TemplateId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(tv => tv.TemplateId);
+            entity.HasIndex(tv => new { tv.TemplateId, tv.VersionNumber }).IsUnique();
         });
 
         // ─── TemplateRecipient ───────────────────────────────────────────────────
@@ -125,6 +137,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(tr => tr.TemplateVersionId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(tr => tr.TemplateVersionId);
         });
 
         // ─── NotificationTracking ────────────────────────────────────────────────
@@ -143,6 +156,8 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(nt => nt.TemplateVersionId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(nt => nt.TenantId);
+            entity.HasIndex(nt => new { nt.TemplateId, nt.TemplateVersionId });
         });
 
         // ─── TrackingRecipient ───────────────────────────────────────────────────
@@ -153,6 +168,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(tr => tr.NotificationTrackingId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(tr => tr.NotificationTrackingId);
         });
 
         // ─── TenantApiKey ─────────────────────────────────────────────────────────
@@ -163,8 +179,8 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(k => k.TenantId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            // Store the List<string> as a JSONB column in Postgres:
+            entity.HasIndex(k => k.KeyHash); // TODO: Should this be unique?
+            entity.HasIndex(k => k.TenantId);
             entity.Property(k => k.Scopes)
                   .HasConversion(
                       v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null)!,
@@ -176,6 +192,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
         modelBuilder.Entity<SubscriptionPlan>(entity =>
         {
             entity.HasKey(sp => sp.Id);
+            entity.HasIndex(sp => sp.Tier);
         });
 
         // ─── TenantSubscription ──────────────────────────────────────────────────
@@ -194,12 +211,16 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(ts => ts.EnterpriseOverridesId)
                   .OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(ts => ts.TenantId);
+            entity.HasIndex(ts => ts.SubscriptionPlanId);
+            entity.HasIndex(ts => ts.IsActive);
         });
 
         // ─── Coupon ──────────────────────────────────────────────────────────────
         modelBuilder.Entity<Coupon>(entity =>
         {
             entity.HasKey(c => c.Id);
+            entity.HasIndex(c => c.Code).IsUnique();
         });
 
         // ─── TenantCoupon ─────────────────────────────────────────────────────────
@@ -214,6 +235,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(tc => tc.CouponId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(tc => new { tc.TenantId, tc.CouponId }).IsUnique();
         });
 
         // ─── EnterprisePlanOverride ──────────────────────────────────────────────
@@ -224,6 +246,7 @@ public class CommuniQueueDbContext(DbContextOptions<CommuniQueueDbContext> optio
                   .WithMany()
                   .HasForeignKey(e => e.TenantId)
                   .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(e => e.TenantId).IsUnique();
         });
     }
 }
