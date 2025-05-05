@@ -2,6 +2,7 @@ using Amazon.Lambda.Annotations;
 using CommuniQueueV2.EventProcessor.Interfaces;
 using CommuniQueueV2.EventProcessor.Middleware;
 using CommuniQueueV2.EventProcessor.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -35,6 +36,22 @@ public class Startup
             builder.ClearProviders();
             builder.AddSerilog(dispose: true);
         });
+
+        services.AddDbContextPool<CommuniQueueDbContext>(opt =>
+        {
+            var conn = configuration.GetConnectionString("communiqueuedb");
+            opt.UseSnakeCaseNamingConvention();
+            opt.EnableDetailedErrors();
+            opt.EnableSensitiveDataLogging();
+            opt.UseNpgsql(conn, npgsql =>
+            {
+                npgsql.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorCodesToAdd: null
+                );
+            });
+        }, poolSize: 128);
 
         // Register message processor
         services.AddSingleton<IMessageProcessor, MessageProcessor>();

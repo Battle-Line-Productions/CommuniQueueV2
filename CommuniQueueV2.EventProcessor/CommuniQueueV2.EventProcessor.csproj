@@ -31,6 +31,9 @@
         <Folder Include="Services\" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\CommuniQueueV2\CommuniQueueV2.csproj" />
+    </ItemGroup>
+    <ItemGroup>
         <None Update="appsettings.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

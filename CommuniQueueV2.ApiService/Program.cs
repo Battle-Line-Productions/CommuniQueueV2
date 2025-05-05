@@ -84,13 +84,21 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-builder.AddNpgsqlDbContext<CommuniQueueDbContext>("communiqueuedb", null,
-    options =>
+builder.Services.AddDbContextPool<CommuniQueueDbContext>(opt =>
+{
+    var conn = builder.Configuration.GetConnectionString("communiqueuedb");
+    opt.UseSnakeCaseNamingConvention();
+    opt.EnableDetailedErrors();
+    opt.EnableSensitiveDataLogging();
+    opt.UseNpgsql(conn, npgsql =>
     {
-        options.UseSnakeCaseNamingConvention();
-        options.EnableDetailedErrors();
-        options.EnableSensitiveDataLogging();
+        npgsql.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorCodesToAdd: null
+        );
     });
+}, poolSize: 128);
 
 var app = builder.Build();
 
