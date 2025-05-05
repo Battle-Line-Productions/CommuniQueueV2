@@ -2,6 +2,7 @@ using System;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
 using CommuniQueueV2;
+using CommuniQueueV2.Extensions;
 using CommuniQueueV2.Middleware;
 using CommuniQueueV2.ServiceDefaults;
 using Microsoft.AspNetCore.RateLimiting;
@@ -36,6 +37,8 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddProblemDetails();
 
 builder.Services.AddResponseCompression();
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -114,5 +117,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapDefaultEndpoints();
+
+await app.MigrateDatabaseAsync();
 
 await app.RunAsync();
