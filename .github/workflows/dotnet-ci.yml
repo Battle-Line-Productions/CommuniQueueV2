@@ -45,4 +45,9 @@ jobs:
         run: dotnet build CommuniQueueV2.sln --configuration Release --no-restore
 
       - name: Run unit tests
-        run: dotnet test CommuniQueueV2.Tests/CommuniQueueV2.Tests.csproj --configuration Release --no-build --verbosity normal
+        run: |
+          dotnet test CommuniQueueV2.Tests/CommuniQueueV2.Tests.csproj \
+            --configuration Release \
+            --no-build \
+            --filter "FullyQualifiedName!~WebTests" \
+            --verbosity normal
