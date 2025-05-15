@@ -17,6 +17,7 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_ORG: battle-line-productions
       SONAR_HOST_URL: https://sonarcloud.io
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -43,6 +44,21 @@ jobs:
         with:
           dotnet-version: '9.x'
 
+      - name: Restore .NET dependencies
+        run: dotnet restore CommuniQueueV2.sln
+
+      - name: Setup Snyk CLI
+        uses: snyk/actions/setup@v1
+        with:
+          version: 'latest'
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/test@v1
+        with:
+          args: --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
       - name: Install SonarScanner for .NET
         run: |
           dotnet tool install --global dotnet-sonarscanner --version 5.*
@@ -55,9 +71,6 @@ jobs:
             /o:"${{ env.SONAR_ORG }}" \
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.login="${{ env.SONAR_TOKEN }}"
-
-      - name: Restore dependencies
-        run: dotnet restore CommuniQueueV2.sln
 
       - name: Build solution
         run: dotnet build CommuniQueueV2.sln --configuration Release --no-restore
