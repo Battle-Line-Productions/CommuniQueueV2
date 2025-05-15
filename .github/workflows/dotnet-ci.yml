@@ -1,0 +1,40 @@
+name: .NET CI
+
+on:
+  push:
+    branches:
+      - main
+      - next
+  pull_request:
+    branches:
+      - main
+      - next
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+
+      - name: Restore dependencies
+        run: dotnet restore CommuniQueueV2.sln
+
+      - name: Build solution
+        run: dotnet build CommuniQueueV2.sln --configuration Release --no-restore
+
+      - name: Run all tests
+        run: dotnet test CommuniQueueV2.sln --configuration Release --no-build --verbosity normal
