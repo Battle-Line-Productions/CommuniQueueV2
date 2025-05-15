@@ -47,21 +47,24 @@ jobs:
       - name: Restore .NET dependencies
         run: dotnet restore CommuniQueueV2.sln
 
-      - name: Setup Snyk CLI
-        uses: snyk/actions/setup@v1
-        with:
-          version: 'latest'
-
-      - name: Run Snyk security scan
-        uses: snyk/actions/test@v1
-        with:
-          args: --all-projects
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/dotnet@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --all-projects
+
+      - name: Snyk Monitor
+        uses: snyk/actions/dotnet@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --all-projects
 
       - name: Install SonarScanner for .NET
         run: |
-          dotnet tool install --global dotnet-sonarscanner --version 5.*
+          dotnet tool install --global dotnet-sonarscanner --version 5.* 
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Begin Sonar analysis
