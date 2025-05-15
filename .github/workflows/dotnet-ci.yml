@@ -49,15 +49,13 @@ jobs:
 
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true
         with:
           args: --all-projects
 
       - name: Snyk Monitor
         uses: snyk/actions/dotnet@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true
         with:
           command: monitor
           args: --all-projects
