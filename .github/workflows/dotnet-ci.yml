@@ -17,6 +17,7 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_ORG: Battle Line Productions
       SONAR_HOST_URL: https://sonarcloud.io
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -43,17 +44,17 @@ jobs:
           dotnet-version: '9.x'
 
       - name: Install SonarScanner for .NET
-        run: dotnet tool install --global dotnet-sonarscanner --version 5.*
+        run: |
+          dotnet tool install --global dotnet-sonarscanner --version 5.*
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Begin Sonar analysis
         run: |
-          dotnet sonarscanner begin \
+          dotnet-sonarscanner begin \
             /k:"CommuniQueueV2" \
             /o:"${{ env.SONAR_ORG }}" \
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.login="${{ env.SONAR_TOKEN }}"
-        env:
-            PATH: ${{ runner.toolcache }}/dotnet-tools:$PATH
 
       - name: Restore dependencies
         run: dotnet restore CommuniQueueV2.sln
@@ -70,4 +71,4 @@ jobs:
             --verbosity normal
 
       - name: End Sonar analysis
-        run: dotnet sonarscanner end /d:sonar.login="${{ env.SONAR_TOKEN }}"
+        run: dotnet-sonarscanner end /d:sonar.login="${{ env.SONAR_TOKEN }}"
