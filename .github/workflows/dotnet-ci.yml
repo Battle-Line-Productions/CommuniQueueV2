@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      SONAR_ORG: Battle Line Productions
+      SONAR_ORG: Battle-Line-Productions
       SONAR_HOST_URL: https://sonarcloud.io
 
     steps:
