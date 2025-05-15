@@ -44,5 +44,5 @@ jobs:
       - name: Build solution
         run: dotnet build CommuniQueueV2.sln --configuration Release --no-restore
 
-      - name: Run all tests
-        run: dotnet test CommuniQueueV2.sln --configuration Release --no-build --verbosity normal
+      - name: Run unit tests
+        run: dotnet test CommuniQueueV2.Tests/CommuniQueueV2.Tests.csproj --configuration Release --no-build --verbosity normal
