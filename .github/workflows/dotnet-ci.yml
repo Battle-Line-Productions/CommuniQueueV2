@@ -51,7 +51,7 @@ jobs:
       - name: Begin Sonar analysis
         run: |
           dotnet-sonarscanner begin \
-            /k:"CommuniQueueV2" \
+            /k:"Battle-Line-Productions_CommuniQueueV2" \
             /o:"${{ env.SONAR_ORG }}" \
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.login="${{ env.SONAR_TOKEN }}"
