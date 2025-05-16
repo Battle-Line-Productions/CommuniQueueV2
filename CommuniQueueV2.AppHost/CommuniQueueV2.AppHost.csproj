@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Annotations" Version="1.7.0" />
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.2.1" />
-    <PackageReference Include="Aspire.Hosting.AWS" Version="9.1.9" />
+    <PackageReference Include="Aspire.Hosting.AWS" Version="9.2.1" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.2.1" />
   </ItemGroup>
 
